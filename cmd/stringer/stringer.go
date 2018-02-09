@@ -145,10 +145,19 @@ func main() {
 		baseName := fmt.Sprintf("%s_string.go", types[0])
 		outputName = filepath.Join(dir, strings.ToLower(baseName))
 	}
-	err := ioutil.WriteFile(outputName, src, 0644)
+	err := writeFile(outputName, src)
 	if err != nil {
 		log.Fatalf("writing output: %s", err)
 	}
+}
+
+func writeFile(name string, content []byte) error {
+	if data, err := ioutil.ReadFile(name); err == nil {
+		if bytes.Equal(data, content) {
+			return nil
+		}
+	}
+	return ioutil.WriteFile(name, content, 0644)
 }
 
 // isDirectory reports whether the named file is a directory.
